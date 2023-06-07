@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+
+  db:
+    image: postgres:9.6-alpine
+    volumes:
+      - planets:/var/lib/postgresql/data/
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    environment:
+      - POSTGRES_USER=planets
+      - POSTGRES_PASSWORD=planets
+    networks:
+      - database_network
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U planets" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile
+  #   restart: always
+  #   networks:
+  #     - net_api
+  #     - database_network
+  #   ports:
+  #     - 8081:8080
+  #   env_file: .env
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+
+networks:
+  database_network:
+volumes:
+  planets:
+
+
