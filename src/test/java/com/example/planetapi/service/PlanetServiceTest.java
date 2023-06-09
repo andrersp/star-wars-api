@@ -1,11 +1,12 @@
 package com.example.planetapi.service;
 
-import static com.example.planetapi.common.PlanetsConstants.PLANET;
-
 import static com.example.planetapi.common.PlanetsConstants.INVALID_PLANET;
+import static com.example.planetapi.common.PlanetsConstants.PLANET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,6 +50,28 @@ public class PlanetServiceTest {
         when(planetRepository.save(INVALID_PLANET)).thenThrow(RuntimeException.class);
 
         assertThatThrownBy(() -> planetService.create(INVALID_PLANET)).isInstanceOf(RuntimeException.class);
+
+    }
+
+    @Test
+    public void getPlanet_ByExistingId_ReturnPlanet() {
+
+        when(planetRepository.findById(1L)).thenReturn(Optional.of(PLANET));
+        Optional<Planet> sut = planetService.getById(1L);
+
+        assertThat(sut).isNotEmpty();
+
+        assertThat(sut.get()).isEqualTo(PLANET);
+
+    }
+
+    @Test
+    public void getPlanet_ByUnexistingId_ReturnEmpty() {
+        when(planetRepository.findById(1L)).thenReturn(Optional.empty());
+        Optional<Planet> sut = planetService.getById(1L);
+
+        assertThat(sut).isEmpty();
+        
 
     }
 
