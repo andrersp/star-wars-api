@@ -5,7 +5,6 @@ import static com.example.planetapi.common.PlanetsConstants.PLANET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -130,12 +129,15 @@ public class PlanetServiceTest {
     @Test
     public void listPlanets_ReturnsNoPlanets() {
 
-        when(planetRepository.findAll(any())).thenReturn(Collections.emptyList());
+        Example<Planet> query = QueryBuilder
+                .makeQuery(Planet.builder().climate(PLANET.getClimate()).terrain(PLANET.getTerrain()).build());
+
+        when(planetRepository.findAll(query)).thenReturn(Collections.emptyList());
 
         List<Planet> sut = planetService.list(PLANET.getTerrain(), PLANET.getClimate());
 
-        assertThat(sut).isEmpty();        
-        
+        assertThat(sut).isEmpty();
+
     }
 
     @Test
