@@ -1,9 +1,19 @@
 package com.example.planetapi.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Example;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 
 import com.example.planetapi.domain.Planet;
 
-public interface PlanetRepository extends JpaRepository<Planet, Long> {
+public interface PlanetRepository extends CrudRepository<Planet, Long>, QueryByExampleExecutor<Planet> {
+
+    Optional<Planet> findByName(String name);
+
+    @Override
+    <S extends Planet> List<S> findAll(Example<S> example);
 
 }
