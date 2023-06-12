@@ -4,7 +4,11 @@ import static com.example.planetapi.common.PlanetsConstants.INVALID_PLANET;
 import static com.example.planetapi.common.PlanetsConstants.PLANET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,6 +24,11 @@ public class PlanetRepositoryTest {
 
     @Autowired
     private TestEntityManager testEntityManager;
+
+    @AfterEach
+    public void AfterEach() {
+        PLANET.setId(null);
+    }
 
     @Test
     public void createPlanet_WithValidData_ReturnsPlanet() {
@@ -55,6 +64,26 @@ public class PlanetRepositoryTest {
         planetCreated.setId(null);
 
         assertThatThrownBy(() -> planetRepository.save(planetCreated)).isInstanceOf(RuntimeException.class);
+
+    }
+
+    @Test
+    public void getPlanet_ByExistingId_ReturnPlanet() {
+        Planet planet = testEntityManager.persistAndFlush(PLANET);
+
+        Optional<Planet> sut = planetRepository.findById(planet.getId());
+
+        assertThat(sut).isNotEmpty();
+        assertThat(sut.get().getId()).isEqualTo(planet.getId());
+
+    }
+
+    @Test
+    public void getPlanet_ByExistingId_ReturnException() {
+
+        Optional<Planet> sut = planetRepository.findById(1L);
+
+        assertThat(sut).isEmpty();
 
     }
 }
