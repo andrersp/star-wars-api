@@ -145,12 +145,12 @@ public class PlanetServiceTest {
 
         assertThatCode(() -> planetService.deletePlanet(1L)).doesNotThrowAnyException();
 
-        // TODO implement
+        
     }
 
     @Test
     public void removePlanet_WithUnexistingId_ThrowsException() {
-        // TODO implement
+        
         doThrow(new RuntimeException()).when(planetRepository).deleteById(99L);
 
         assertThatThrownBy(() -> planetService.deletePlanet(99L)).isInstanceOf(RuntimeException.class);

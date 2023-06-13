@@ -4,7 +4,7 @@ import static com.example.planetapi.common.PlanetsConstants.INVALID_PLANET;
 import static com.example.planetapi.common.PlanetsConstants.PLANET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
+
 
 import java.util.Optional;
 
