@@ -86,4 +86,24 @@ public class PlanetRepositoryTest {
         assertThat(sut).isEmpty();
 
     }
+
+    @Test
+    void getPlanet_ByExistingName_ReturnPlanet(){
+        Planet planet = testEntityManager.persistAndFlush(PLANET);
+
+        Optional<Planet> sut = planetRepository.findByName(planet.getName());
+
+        assertThat(sut).isNotEmpty();
+        assertThat(sut.get().getId()).isEqualTo(planet.getId());
+
+    }
+
+    @Test
+    public void getPlanet_ByInexistingName_ReturnException() {
+
+        Optional<Planet> sut = planetRepository.findByName("name");
+
+        assertThat(sut).isEmpty();
+
+    }
 }
