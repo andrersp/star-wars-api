@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -48,10 +49,10 @@ public class PlanetRepositoryTest {
     Planet emptyPlanet = new Planet();
 
     assertThatThrownBy(() -> planetRepository.save(emptyPlanet))
-      .isInstanceOf(RuntimeException.class);
+        .isInstanceOf(RuntimeException.class);
 
     assertThatThrownBy(() -> planetRepository.save(INVALID_PLANET))
-      .isInstanceOf(RuntimeException.class);
+        .isInstanceOf(RuntimeException.class);
   }
 
   @Test
@@ -62,7 +63,7 @@ public class PlanetRepositoryTest {
     planetCreated.setId(null);
 
     assertThatThrownBy(() -> planetRepository.save(planetCreated))
-      .isInstanceOf(RuntimeException.class);
+        .isInstanceOf(RuntimeException.class);
   }
 
   @Test
@@ -114,11 +115,21 @@ public class PlanetRepositoryTest {
   @Sql("/import_planets.sql")
   public void listPlanets_ReturnsNoPlanets() {
     Example<Planet> query = QueryBuilder.makeQuery(
-      Planet.builder().climate("Nenhum").terrain("nenhum").build()
-    );
+        Planet.builder().climate("Nenhum").terrain("nenhum").build());
 
     List<Planet> sut = planetRepository.findAll(query);
 
     assertThat(sut.size()).isEqualTo(0);
   }
+
+  @Test
+  public void removePlanet_WithExistingId_RemovesPlanetFromDatabase() {
+    Planet planet = testEntityManager.persistFlushFind(PLANET);
+    planetRepository.deleteById(planet.getId());
+
+    Planet planetRemoved = testEntityManager.find(Planet.class, planet.getId());
+
+    assertThat(planetRemoved).isNull();
+  }
+
 }
