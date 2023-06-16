@@ -7,7 +7,6 @@ import com.example.planetapi.domain.Planet;
 
 public class QueryBuilder {
     private QueryBuilder() {
-        throw new IllegalStateException();
     }
 
     public static Example<Planet> makeQuery(Planet planet) {

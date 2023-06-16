@@ -1,0 +1,9 @@
+Pula Teste Integracao: mvn clean verify -DskipITs=true || mvn clean test
+
+Executa somente teste Integracao : mvn clean verify -Dsurefire.skip=true
+
+Executa todos os testes: mvn clean verify
+
+Executa Teste Mutante: mvn test-compile org.pitest:pitest-maven:mutationCoverage
+
+Report Teste: mvn clean test jacoco:report
